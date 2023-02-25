@@ -1,7 +1,17 @@
 export type ResizeOptions = {
   disabled?: boolean;
   minimumSize?: number;
+  maximumSize?: number | null;
   handlerSize?: number;
+  handlers?: Handlers;
+  borderStyle?: string;
+};
+
+export type Handlers = {
+  leftTop?: boolean;
+  leftBottom?: boolean;
+  rightTop?: boolean;
+  rightBottom?: boolean;
 };
 
 export const resize = (node: HTMLElement, options: ResizeOptions = {}) => {
@@ -14,15 +24,26 @@ export const resize = (node: HTMLElement, options: ResizeOptions = {}) => {
   let initialMouseX: number;
   let initialMouseY: number;
 
-  let handledElement: EventTarget | null;
+  let handledElement: HTMLElement | null;
+  let handlersAvail: Handlers = {
+    leftTop: true,
+    leftBottom: true,
+    rightTop: true,
+    rightBottom: true,
+  };
 
   let {
     minimumSize = options.minimumSize ?? 20,
     disabled = options.disabled ?? false,
     handlerSize = options.handlerSize ?? 10,
+    handlers = options.handlers ?? handlersAvail,
+    maximumSize = options.maximumSize ?? null,
+    borderStyle = options.borderStyle ?? "2px solid rgba(0, 0, 0, 0.4)",
   } = options;
 
-  const handlePointerDown = (e: MouseEvent) => {
+  node.style.position = "absolute";
+
+  const onResizeStart = (e: MouseEvent) => {
     if (disabled) {
       return;
     }
@@ -36,74 +57,74 @@ export const resize = (node: HTMLElement, options: ResizeOptions = {}) => {
     initialPosX = node.getBoundingClientRect().left;
     initialPosY = node.getBoundingClientRect().top;
 
-    handledElement = e.target;
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", stopResize);
+    handledElement = e.target as HTMLElement;
+    window.addEventListener("pointermove", onResize);
+    window.addEventListener("pointerup", onResizeStop);
   };
 
-  const stopResize = () => {
-    window.removeEventListener("pointermove", handlePointerMove);
+  const onResizeStop = () => {
+    window.removeEventListener("pointermove", onResize);
   };
 
-  const handlePointerMove = (e: MouseEvent) => {
+  const onResize = (e: MouseEvent) => {
     if (disabled) {
       return;
     }
 
-    const direction: string = handledElement.direction;
-    if (direction.includes("right")) {
+    const coordinates: string =
+      handledElement?.getAttribute("data-coordinates") ?? "";
+    if (coordinates.includes("right")) {
       const width = initialWidth + (e.pageX - initialMouseX);
-      if (width > minimumSize) {
+      if (width > minimumSize && (maximumSize ? width < maximumSize : true)) {
         node.style.width = `${width}px`;
       }
     }
 
-    if (direction.includes("bottom")) {
+    if (coordinates.includes("bottom")) {
       const height = initialHeight + (e.pageY - initialMouseY);
-      if (height > minimumSize) {
+      if (height > minimumSize && (maximumSize ? height < maximumSize : true)) {
         node.style.height = `${height}px`;
       }
     }
 
-    if (direction.includes("left")) {
+    if (coordinates.includes("left")) {
       const width = initialWidth - (e.pageX - initialMouseX);
       const transformMatrix = getTransform(node);
       const left = initialPosX + (e.pageX - initialMouseX) - transformMatrix.x;
 
-      if (width > minimumSize) {
-        node.style.width = `${width}px`; // eslint-disable-line
+      if (width > minimumSize && (maximumSize ? width < maximumSize : true)) {
+        node.style.width = `${width}px`;
         node.style.left = `${left}px`;
       }
     }
 
-    if (direction.includes("top")) {
+    if (coordinates.includes("top")) {
       const height = initialHeight - (e.pageY - initialMouseY);
       const transformMatrix = getTransform(node);
       const top = initialPosY + (e.pageY - initialMouseY) - transformMatrix.y;
-      if (height > minimumSize) {
+      if (height > minimumSize && (maximumSize ? height < maximumSize : true)) {
         node.style.top = `${top}px`;
         node.style.height = `${height}px`;
       }
     }
   };
 
-  node.style.position = "absolute";
-  const resizers = [
-    createDraggableDiv("left top", handlerSize),
-    createDraggableDiv("left bottom", handlerSize),
-    createDraggableDiv("right top", handlerSize),
-    createDraggableDiv("right bottom", handlerSize),
-  ];
+  let resizers: HTMLElement[] = [];
+  Object.keys(handlers).forEach((key) => {
+    if (handlers[key as keyof Handlers] !== true) {
+      return;
+    }
 
-  resizers.forEach((div) => {
+    let div = createResizersDiv(key.toLowerCase(), handlerSize, borderStyle);
     node.appendChild(div);
-    div.addEventListener("pointerdown", handlePointerDown);
+    div.addEventListener("pointerdown", onResizeStart);
+    resizers = [...resizers, div];
   });
 
   return {
     destroy() {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerup", stopResize);
+      window.removeEventListener("pointermove", onResize);
+      window.removeEventListener("pointerup", onResizeStop);
 
       resizers.forEach((div) => {
         node.removeChild(div);
@@ -113,22 +134,44 @@ export const resize = (node: HTMLElement, options: ResizeOptions = {}) => {
     update(options: ResizeOptions) {
       disabled = options.disabled ?? false;
       minimumSize = options.minimumSize ?? 20;
+      maximumSize = options.maximumSize ?? null;
+      handlers = options.handlers ?? handlersAvail;
+      borderStyle = options.borderStyle ?? "2px solid rgba(0, 0, 0, 0.4)";
     },
   };
 };
 
-const createDraggableDiv = (directionClass: string, handlerSize: number) => {
+const createResizersDiv = (coordinates: string, handlerSize: number, borderStyle: string) => {
   let div = document.createElement("div");
+  let cursorDirection = "";
   div.style.height = `${handlerSize}px`;
   div.style.width = `${handlerSize}px`;
-  div.style.background = "blue";
   div.style.position = "absolute";
   div.classList.add("resizeable");
-  div.direction = directionClass;
+  div.dataset.coordinates = coordinates;
 
-  directionClass.split(" ").forEach((direction: string) => {
-    div.style[direction] = `-${handlerSize / 2}px` //eslint-disable-line
-  });
+  const positionStyle = `-${handlerSize / 2}px`;
+  if (coordinates.includes("top")) {
+    div.style["top"] = positionStyle;
+    div.style.borderTop = borderStyle;
+    cursorDirection += "n";
+  }
+  if (coordinates.includes("bottom")) {
+    div.style["bottom"] = positionStyle;
+    div.style.borderBottom = borderStyle;
+    cursorDirection += "s";
+  }
+  if (coordinates.includes("right")) {
+    div.style["right"] = positionStyle;
+    div.style.borderRight = borderStyle;
+    cursorDirection += "e";
+  }
+  if (coordinates.includes("left")) {
+    div.style["left"] = positionStyle;
+    div.style.borderLeft = borderStyle;
+    cursorDirection += "w";
+  }
+  div.style.cursor = `${cursorDirection}-resize`;
 
   return div;
 };

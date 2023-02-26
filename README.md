@@ -3,6 +3,7 @@
 <p align="center">
 <img alt="npm" src="https://img.shields.io/npm/v/svelte-resize?logoColor=red&style=for-the-badge">
   <img alt="license" src="https://img.shields.io/badge/License-MIT-black?style=for-the-badge">
+  <img alt="npm bundle size" src="https://img.shields.io/bundlephobia/minzip/svelte-resize?color=brightgreen&style=for-the-badge">
   <img alt="svelte" src="https://img.shields.io/badge/Made-for%20Svelte-red?style=for-the-badge&logo=svelte">
 </p>
 <br>

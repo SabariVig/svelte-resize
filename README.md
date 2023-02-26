@@ -20,20 +20,20 @@ Custom minimal resize library for svelte which does not use Resize Observable AP
 With pnpm:
 
 ```sh
-pnpm install resizevelt
+pnpm install svelte-resize
 ```
 
 With Yarn:
 
 ```sh
-yarn add resizevelt
+yarn add svelte-resize
 ```
 
 
 With NPM:
 
 ```sh
-npm install resizevelt
+npm install svelte-resize
 ```
 
 ## Usage
@@ -41,7 +41,7 @@ npm install resizevelt
 ```svelte
 
 <script>
-  import { resize } from 'resizevelt'
+  import { resize } from 'svelte-resize'
 </script>
 
 

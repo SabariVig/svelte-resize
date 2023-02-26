@@ -10,7 +10,7 @@ Custom minimal resize library for svelte which does not use Resize Observable AP
 With pnpm:
 
 ```sh
-pnpm install resizevelt\
+pnpm install resizevelt
 ```
 
 With Yarn:

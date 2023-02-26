@@ -1,4 +1,12 @@
 # Resize Svelte
+ 
+<p align="center">
+<img alt="npm" src="https://img.shields.io/npm/v/svelte-resize?logoColor=red&style=for-the-badge">
+  <img alt="license" src="https://img.shields.io/badge/License-MIT-black?style=for-the-badge">
+  <img alt="svelte" src="https://img.shields.io/badge/Made-for%20Svelte-red?style=for-the-badge&logo=svelte">
+</p>
+<br>
+
 <p align="center">
 <img src="https://user-images.githubusercontent.com/33371586/221412630-75532820-7067-4a12-be87-ff3fa47aee9d.png" width="200px" />
 </p>
@@ -6,8 +14,7 @@
 
 ## Description
 
-Custom minimal resize library for svelte which does not use Resize Observable API, 
-
+svelte-resize is vanilla without any 3rd party dependencies library made for svelte written in typescript. Super simple API thats easy to integrate.
 
 ## Demo
 

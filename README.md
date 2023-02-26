@@ -1,6 +1,6 @@
 # Resize Svelte
 <p align="center">
-<img src="https://user-images.githubusercontent.com/33371586/221412630-75532820-7067-4a12-be87-ff3fa47aee9d.png" />
+<img src="https://user-images.githubusercontent.com/33371586/221412630-75532820-7067-4a12-be87-ff3fa47aee9d.png" width="200px" />
 </p>
 
 

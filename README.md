@@ -1,8 +1,18 @@
 # Resize Svelte
+<p align="center">
+<img src="https://user-images.githubusercontent.com/33371586/221412630-75532820-7067-4a12-be87-ff3fa47aee9d.png" />
+</p>
+
 
 ## Description
 
 Custom minimal resize library for svelte which does not use Resize Observable API, 
+
+
+## Demo
+
+![Recording 2023-02-26 at 18 43 47](https://user-images.githubusercontent.com/33371586/221412647-157d40d9-06cc-459b-9e55-c499aa785158.gif)
+
 
 ## Installation
 

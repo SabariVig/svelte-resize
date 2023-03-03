@@ -3,5 +3,5 @@
 </script>
 
 <div style="background-color:aqua; position: absolute; top: 300px; left: 200px;" use:resize>
-  Hallo Welt
+  Here be dragons
 </div>

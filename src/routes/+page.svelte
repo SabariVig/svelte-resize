@@ -2,7 +2,13 @@
 	import { resize } from '../lib/index';
 </script>
 
-<div style="background-color:grey" use:resize={{ borderStyle: '5px solid red' }}>
+<div
+	style="background-color:grey"
+	use:resize={{
+		borderStyle: '5px solid red',
+		handlers: { top: true, right: true, bottom: true, left: true }
+	}}
+>
 	Here be dragons
 </div>
 

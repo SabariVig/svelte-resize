@@ -1,0 +1,16 @@
+{
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingComma": "none",
+      "semicolons": "asNeeded",
+      "indentSize": 4
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  }
+}

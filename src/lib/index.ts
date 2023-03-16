@@ -5,7 +5,6 @@ export type ResizeOptions = {
   handlerSize?: number
   handlers?: Handlers
   borderStyle?: string
-  position?: "absolute" | "relative"
 }
 
 export type Handlers = {
@@ -41,10 +40,11 @@ export const resize = (node: HTMLElement, options: ResizeOptions = {}) => {
     handlers = options.handlers ?? handlersAvail,
     maximumSize = options.maximumSize ?? null,
     borderStyle = options.borderStyle ?? '2px solid rgba(0, 0, 0, 0.4)',
-    position = options.position ?? "absolute"
   } = options
 
-  node.style.position = position
+  const position = getComputedStyle(node).position
+  console.log(position)
+  node.style.position = position === "static" ? "absolute" : position
 
   const onResizeStart = (e: MouseEvent) => {
     if (disabled) {
@@ -160,7 +160,6 @@ export const resize = (node: HTMLElement, options: ResizeOptions = {}) => {
       maximumSize = options.maximumSize ?? null
       handlers = options.handlers ?? handlersAvail
       borderStyle = options.borderStyle ?? '2px solid rgba(0, 0, 0, 0.4)'
-      position = options.position ?? "absolute"
     }
   }
 }

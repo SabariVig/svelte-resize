@@ -5,8 +5,8 @@
 <table>
 	<thead>
 		<tr>
-			<th use:resize> Column 1</th>
-			<th use:resize> Column 2</th>
+			<th use:resize={{ handlers: { right: true } }}> Column 1</th>
+			<th use:resize={{ handlers: { right: true } }}> Column 2</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -28,9 +28,19 @@
 		height: 500px;
 		background: grey;
 	}
+	.box:nth-child(1) {
+		background: aqua;
+	}
+
 	.flex {
+		margin: 1rem;
 		display: flex;
 	}
+
+	table {
+		margin: 1rem;
+	}
+
 	th {
 		position: relative;
 	}
